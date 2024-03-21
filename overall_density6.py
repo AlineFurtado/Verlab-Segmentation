@@ -215,70 +215,7 @@ class OverallDensity(object):
             self.cluster.append(local_cluster)
             self.density.append(local_density)
 
-    #falta associar peso, pontos nessa região receberão peso null (0)
-    def is_point_in_field_of_vision(self, person, point_x, point_y):
-        # Calcule as diferenças entre as coordenadas do ponto e a posição da pessoa
-        delta_x = point_x - person.x
-        delta_y = point_y - person.y
-
-        # Calcule a distância do ponto à posição da pessoa
-        distance_to_point = math.sqrt(delta_x ** 2 + delta_y ** 2)
-
-        # Calcule o ângulo entre a direção da pessoa e o ponto em radianos
-        angle_to_point = math.atan2(delta_y, delta_x)
-
-        # Normalize o ângulo para o intervalo de -pi a pi radianos
-        angle_to_point = (angle_to_point + 2 * math.pi) % (2 * math.pi)
-
-        # Ajuste para levar em consideração a orientação da pessoa
-        person_th_normalized = (person.th + math.pi) % (2 * math.pi) - math.pi
-        angle_to_point = (angle_to_point - person_th_normalized + 3 * math.pi) % (2 * math.pi) - math.pi
-
-        # Calcule os limites do campo de visão em radianos
-        lower_limit = -np.deg2rad(100)
-        upper_limit = np.deg2rad(100)
-
-        # Verifique se o ângulo e a distância estão dentro do campo de visão
-        if lower_limit <= angle_to_point <= upper_limit:
-            return True
-        else:
-            return False
-
-    #falta associar peso, pontos nessa região receberão peso mediun (por ex:3)
-    def is_approach_point(self, person, point_x, point_y):
-        # Calcule as diferenças entre as coordenadas do ponto e a posição da pessoa
-        delta_x = point_x - person.x
-        delta_y = point_y - person.y
-
-        # Calcule a distância do ponto à posição da pessoa
-        distance_to_point = math.sqrt(delta_x ** 2 + delta_y ** 2)
-
-        # Calcule o ângulo entre a direção da pessoa e o ponto em radianos
-        angle_to_point = math.atan2(delta_y, delta_x)
-        #print(f'angle_to_point:{angle_to_point}')
-
-        # Normalize o ângulo para o intervalo de -pi a pi radianos
-        angle_to_point = (angle_to_point + 2 * math.pi) % (2 * math.pi)
-        #print(f'ang_normalizado:{angle_to_point}')
-        # Ajuste para levar em consideração a orientação da pessoa
-        person_th_normalized = (person.th + math.pi) % (2 * math.pi) - math.pi
-        angle_to_point = (angle_to_point - person_th_normalized + 3 * math.pi) % (2 * math.pi) - math.pi
-
-        # Calcule os limites do campo de visão em radianos
-        lower_limit = - np.deg2rad(40)
-        upper_limit =  np.deg2rad(40)
-        
-        if (
-                math.isclose(lower_limit, angle_to_point, abs_tol=1e-6) or
-                math.isclose(upper_limit, angle_to_point, abs_tol=1e-6)
-                ):
-            return True
-        elif lower_limit < angle_to_point < upper_limit:
-            return True
-        else:
-            return False
-
-    #falta definir pesos, pontos nessa região receberão peso max (por ex: 5)
+       #falta definir pesos, pontos nessa região receberão peso max (por ex: 5)
     def is_better_approach_point(self, person, point_x, point_y):
         # Calcule as diferenças entre as coordenadas do ponto e a posição da pessoa
         delta_x = point_x - person.x
@@ -299,8 +236,8 @@ class OverallDensity(object):
         angle_to_point = (angle_to_point - person_th_normalized + 3 * math.pi) % (2 * math.pi) - math.pi
         #print(f'ang_normalizado_em_relação_a_pessoa:{angle_to_point}')
         # Calcule os limites do campo de visão em radianos
-        lower_limit = - np.deg2rad(10)
-        upper_limit =  np.deg2rad(10)
+        lower_limit = - np.deg2rad(15)
+        upper_limit =  np.deg2rad(15)
         
         if (
                 math.isclose(lower_limit, angle_to_point, abs_tol=1e-6) or
@@ -436,8 +373,8 @@ class OverallDensity(object):
             angle_to_point = (angle_to_point - opposite_angle + 3 * math.pi) % (2 * math.pi) - math.pi
 
             # Calcule os limites do campo de visão em radianos
-            lower_limit = -np.deg2rad(100)
-            upper_limit = np.deg2rad(100)
+            lower_limit = -np.deg2rad(90)
+            upper_limit = np.deg2rad(90)
 
             # Verifique se o ângulo e a distância estão dentro do campo de visão
             if lower_limit <= angle_to_point <= upper_limit:
@@ -544,9 +481,6 @@ class OverallDensity(object):
                     par_persons.append(person1)
                     par_persons.append(person2)
 
-                    #obter o angulo médio para o qual o par de pessoas converge
-                    #mean_orientation=self.calculate_mean_orientation(par_persons)
-                    #print(f'mean_orientation_par:{np.rad2deg(mean_orientation)}')
                     #obter o ponto médio entre o par de pessoas
                     for i in range(len(par_persons) - 1):
                         #print(f'x1:{par_persons[i].x}')
@@ -563,54 +497,34 @@ class OverallDensity(object):
                         angulo_perpendicular = math.pi / 2 - angulo_vetor
                         th_med = angulo_perpendicular 
                         th_opost = -th_med
-                        #print(f'th_med:{np.rad2deg(th_med)}')
-                        #print(f'-th_med:{np.rad2deg(th_med + np.deg2rad(180))}')
-                        
-                        #verificar se a f-formation é face a face:
-                        for i in range(len(par_persons) - 1):
-                            angulo1 = par_persons[i].th
-                            angulo2 = par_persons[i + 1].th
-                            if angulo1 != angulo2:
-                                # Calcula a diferença entre os ângulos (em módulo)
-                                diferenca = abs(angulo1 - angulo2)
-                                # Verifica se a diferença é igual a 180 graus
-                                if np.deg2rad(165) < diferenca < np.deg2rad(195) or np.deg2rad(0) < diferenca < np.deg2rad(15):
-                                    #a região que me interessa equivale ao th de cada person + 90 graus
-                                    person_Ocenter = Person(xc, yc, (angulo1 + np.deg2rad(90)), id_node=0)
-                                    person_Ocenter2 = Person(xc, yc, (angulo2 + np.deg2rad(90)), id_node=1)
-                                else:
-                                    #criar uma 'pessoa virtual' no ponto médio do vetor orientada para + ou -angulo perpendicular 
-                                    person_Ocenter = Person(x_med, y_med, th_med, 0)
-                                    person_Ocenter2 = Person(x_med, y_med, th_opost, 1)
-                            else:
-                                    #criar uma 'pessoa virtual' no ponto médio do vetor orientada para + ou -angulo perpendicular 
-                                    person_Ocenter = Person(x_med, y_med, th_med, 0)
-                                    person_Ocenter2 = Person(x_med, y_med, th_opost, 1)
-                            #verificar se os pontos do cluster estão dentro do fov dessa pessoa virtual
-                            for row in range(self.cluster[cluster_idx].shape[0]):
-                                for col in range(self.cluster[cluster_idx].shape[1]):
-                                    if self.cluster[cluster_idx][row, col] == 1:  # Verifique se o ponto pertence ao cluster
-                                        point_x = self.x[col]
-                                        point_y = self.y[row]
-                                        # Verifique se o ponto está no campo de visão da pessoa
-                                        #if self.is_point_in_field_of_vision(person_Ocenter, point_x, point_y):
-                                            #    points_in_fov[person].append((point_x, point_y))
-                                        if self.is_point_in_field_of_vision(person_Ocenter2, point_x, point_y):
-                                            points_in_fov[person].append((point_x, point_y))
-                                        # Verifique se o ponto está na região de approach da pessoa
-                                        #if self.is_approach_point(person_Ocenter, point_x, point_y):
-                                            #    points_in_fov[person].remove((point_x, point_y))
-                                            #    approach_points[person].append((point_x, point_y))
-                                        if self.is_approach_point(person_Ocenter2, point_x, point_y):
-                                            points_in_fov[person].remove((point_x, point_y))
-                                            approach_points[person].append((point_x, point_y))
-                                        # Verifique se o ponto está na melhor região de approach da pessoa
-                                        #if self.is_better_approach_point(person_Ocenter, point_x, point_y):
-                                            #    approach_points[person].remove((point_x, point_y))
-                                            #    better_approach_points[person].append((point_x, point_y))
-                                        if self.is_better_approach_point(person_Ocenter2, point_x, point_y):
-                                            approach_points[person].remove((point_x, point_y))
-                                            better_approach_points[person].append((point_x, point_y))
+                        #criar uma 'pessoa virtual' no ponto médio do vetor orientada para + ou -angulo perpendicular 
+                        person_Ocenter = Person(x_med, y_med, th_med, 0)
+                        person_Ocenter2 = Person(x_med, y_med, th_opost, 1)
+                        #verificar se os pontos do cluster estão dentro do fov dessa pessoa virtual
+                        for row in range(self.cluster[cluster_idx].shape[0]):
+                            for col in range(self.cluster[cluster_idx].shape[1]):
+                                if self.cluster[cluster_idx][row, col] == 1:  # Verifique se o ponto pertence ao cluster
+                                    point_x = self.x[col]
+                                    point_y = self.y[row]
+                                    # Verifique se o ponto está no campo de visão da pessoa
+                                    if self.is_point_in_field_of_vision(person_Ocenter, point_x, point_y):
+                                        points_in_fov[person].append((point_x, point_y))
+                                    if self.is_point_in_field_of_vision(person_Ocenter2, point_x, point_y):
+                                        points_in_fov[person].append((point_x, point_y))
+                                    # Verifique se o ponto está na região de approach da pessoa
+                                    if self.is_approach_point(person_Ocenter, point_x, point_y):
+                                        points_in_fov[person].remove((point_x, point_y))
+                                        approach_points[person].append((point_x, point_y))
+                                    if self.is_approach_point(person_Ocenter2, point_x, point_y):
+                                        points_in_fov[person].remove((point_x, point_y))
+                                        approach_points[person].append((point_x, point_y))
+                                    # Verifique se o ponto está na melhor região de approach da pessoa
+                                    if self.is_better_approach_point(person_Ocenter, point_x, point_y):
+                                        approach_points[person].remove((point_x, point_y))
+                                        better_approach_points[person].append((point_x, point_y))
+                                    if self.is_better_approach_point(person_Ocenter2, point_x, point_y):
+                                        approach_points[person].remove((point_x, point_y))
+                                        better_approach_points[person].append((point_x, point_y))
 
             # Após processar as listas better_approach_points e approach_points, faça a verificação e mova os pontos para points_in_fov
                 for person in guard_persons:
@@ -636,8 +550,7 @@ class OverallDensity(object):
         #print(f'better_approach_points[person]')
         print(f'approach_points:{len(approach_points[person])}, better:{len(better_approach_points[person])}')        
         return points_in_fov, approach_points, better_approach_points
-
-
+        
     # Plotagens
     def draw_overall(self, drawDensity=False, drawCluster=False, drawGraph=False, drawSegment=False, people=None, plot=plt):
         
