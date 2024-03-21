@@ -479,15 +479,6 @@ class OverallDensity(object):
                 person = people[person_idx]  # Acesse a pessoa correspondente ao índice
                 persons = []
                 persons.append(person)
-                #if person.th == np.deg2rad(0):
-                #    th_op = np.deg2rad(180)
-                #elif person.th == np.deg2rad(180):
-                #    th_op = np.deg2rad(0)
-                #else:
-                #    th_op = person.th + math.pi
-                #    if th_op > math.pi:
-                #        th_op -= 2 * math.pi
-                #op_person = Person(person.x, person.y, th_op, [person_idx+1])
                 # Verifique cada ponto no cluster
                 for row in range(self.cluster[cluster_idx].shape[0]):
                     for col in range(self.cluster[cluster_idx].shape[1]):
@@ -510,20 +501,6 @@ class OverallDensity(object):
                                 approach_points[person].remove((point_x, point_y))
                                 better_approach_points[person].append((point_x, point_y))
 
-                                # Verifique se o ponto está no campo de visão da pessoa
-#                            if self.is_point_in_field_of_vision(op_person, point_x, point_y):
-#                                points_in_fov[person].append((point_x, point_y))
-                                
-                            # Verifique se o ponto está na região de approach da pessoa
-#                            if self.is_approach_point(op_person, point_x, point_y):
-#                                points_in_fov[person].remove((point_x, point_y))
-#                                approach_points[person].append((point_x, point_y))
-                            
-                            # Verifique se o ponto está na melhor região de approach da pessoa
-#                            if self.is_better_approach_point(op_person, point_x, point_y):
-#                                approach_points[person].remove((point_x, point_y))
-#                                better_approach_points[person].append((point_x, point_y))
-
                 for row in range(self.cluster[cluster_idx].shape[0]):
                     for col in range(self.cluster[cluster_idx].shape[1]):
                         if self.cluster[cluster_idx][row, col] == 1:  # Verifique se o ponto pertence ao cluster
@@ -531,167 +508,10 @@ class OverallDensity(object):
                             point_y = self.y[row]
                             point = (point_x, point_y)
                             
-                            #nome_arquivo = 'resultado_th_op.txt'
-
-                            #with open(nome_arquivo, 'w') as arquivo:
                             #verifica se o ponto está nas costas da pessoa
                             if self.is_point_back2(persons, point):
                                 #classifica esse ponto na região NAR
                                 points_in_fov[person].append(point)
-
-            #tratar as especificidades de grupos com 2 pessoas 
-#            elif num_people == 2:
-#                X, Y = np.meshgrid(self.x, self.y)
-                #calcular as coordenadas do centro do cluster
-#                social_zone_borders = []  # Lista para armazenar as bordas estimadas da zona social
-#                # Inicialize listas para armazenar as coordenadas X e Y das bordas estimadas
-#                border_x = []
-#                border_y = []
-#                # Preencha as listas com as coordenadas X e Y dos pontos de borda
-#                for row in range(self.cluster[cluster_idx].shape[0]):
-#                    for col in range(self.cluster[cluster_idx].shape[1]):
-#                        if self.cluster[cluster_idx][row, col] == 1:  # Verifique se o ponto pertence ao cluster
-#                            border_x.append(X[row, col])
-#                            border_y.append(Y[row, col])
-#                # Adicione as coordenadas X e Y dos pontos de borda à lista social_zone_borders
-#                social_zone_borders.append((border_x, border_y))
-#                for border_x, border_y in social_zone_borders:
-#                    # Calcula as coordeandas do centro do cluster 
-#                    xc, yc = self.calculate_cluster_properties((border_x, border_y))
-#                #iterar no cluster e guardar os atributos de person1 e person2
-#                guard_persons = []
-#                for person_idx in cluster:
-#                    person= people[person_idx]
-#                    guard_persons.append(person)
-#                #obter o angulo médio para qual todas as orientações convergem
-#                mean_orientation=self.calculate_mean_orientation(guard_persons)
-               # print(np.rad2deg(mean_orientation))
-                
-#                #verificar se a f-formation é face a face:
-#                for i in range(len(guard_persons) - 1):
-#                    angulo1 = guard_persons[i].th
-#                    angulo2 = guard_persons[i + 1].th
-#                if angulo1 != angulo2:
-#                    #print(np.rad2deg(angulo1))
-#                    #print(np.rad2deg(angulo2))
-#                    # Calcula a diferença entre os ângulos (em módulo)
-#                    diferenca = abs(angulo1 - angulo2)
-#                    # Normalize diferença para o intervalo de -pi a pi radianos
-#                    diferenca = (diferenca + 2 * math.pi) % (2 * math.pi)
-#                    #print('dif:{diferenca}')
-#                    # Verifica se a diferença é igual a 180 graus
-#                    if np.deg2rad(160) < diferenca < np.deg2rad(190) or np.deg2rad(0) < diferenca < np.deg2rad(30):
-#                        #a região que me interessa equivale ao th de cada person + 90 graus
-#                        p_Ocenter1 = Person(xc, yc, (angulo1 + np.deg2rad(90)), id_node=0)
-#                        p_Ocenter2 = Person(xc, yc, (angulo2 + np.deg2rad(90)), id_node=1)
-
-#                        #verificar se os pontos do cluster estão dentro do fov dessa pessoa virtual
-#                        for row in range(self.cluster[cluster_idx].shape[0]):
-#                            for col in range(self.cluster[cluster_idx].shape[1]):
-#                                if self.cluster[cluster_idx][row, col] == 1:  # Verifique se o ponto pertence ao cluster
-#                                    point_x = self.x[col]
-#                                    point_y = self.y[row]
-#                                    # Verifique se o ponto está no campo de visão da pessoa
-#                                    if self.is_point_in_field_of_vision(p_Ocenter1, point_x, point_y):
-#                                        points_in_fov[person].append((point_x, point_y))
-#                                    if self.is_point_in_field_of_vision(p_Ocenter2, point_x, point_y):
-#                                        points_in_fov[person].append((point_x, point_y))
-#                                    # Verifique se o ponto está na região de approach da pessoa
-#                                    if self.is_approach_point(p_Ocenter1, point_x, point_y):
-#                                        points_in_fov[person].remove((point_x, point_y))
-#                                        approach_points[person].append((point_x, point_y))
-#                                    if self.is_approach_point(p_Ocenter2, point_x, point_y):
-#                                        points_in_fov[person].remove((point_x, point_y))
-#                                        approach_points[person].append((point_x, point_y))
-#                                    # Verifique se o ponto está na melhor região de approach da pessoa
-#                                    if self.is_better_approach_point(p_Ocenter1, point_x, point_y):
-#                                        approach_points[person].remove((point_x, point_y))
-#                                        better_approach_points[person].append((point_x, point_y))
-#                                    if self.is_better_approach_point(p_Ocenter2, point_x, point_y):
-#                                        approach_points[person].remove((point_x, point_y))
-#                                        better_approach_points[person].append((point_x, point_y))
-#                    else:
-#                        print(f'pessoas não estão em frente diferença {diferenca}')
-#                        #criar uma 'pessoa virtual' no centro do O_space 
-#                        person_Ocenter = Person(xc, yc, mean_orientation, 0)
-#                        opposite_mean_orientation = np.deg2rad(180) - mean_orientation
-#                        person_Ocenter1 = Person(xc, yc, opposite_mean_orientation, 1)
-#                        #verificar se os pontos do cluster estão dentro do fov dessa pessoa virtual
-#                        for row in range(self.cluster[cluster_idx].shape[0]):
-#                            for col in range(self.cluster[cluster_idx].shape[1]):
-#                                if self.cluster[cluster_idx][row, col] == 1:  # Verifique se o ponto pertence ao cluster
-#                                    point_x = self.x[col]
-#                                    point_y = self.y[row]
-#                                    # Verifique se o ponto está no campo de visão da pessoa
-#                                    if self.is_point_in_field_of_vision(person_Ocenter, point_x, point_y):
-#                                        points_in_fov[person].append((point_x, point_y))
-#                                    # Verifique se o ponto está na região de approach da pessoa
-#                                    if self.is_approach_point(person_Ocenter, point_x, point_y):
-#                                        points_in_fov[person].remove((point_x, point_y))
-#                                        approach_points[person].append((point_x, point_y))
-#                                    # Verifique se o ponto está na melhor região de approach da pessoa
-#                                    if self.is_better_approach_point(person_Ocenter, point_x, point_y):
-#                                        approach_points[person].remove((point_x, point_y))
-#                                        better_approach_points[person].append((point_x, point_y))
-#                                    if self.is_point_in_field_of_vision(person_Ocenter1, point_x, point_y):
-#                                        points_in_fov[person].append((point_x, point_y))
-#                                    # Verifique se o ponto está na região de approach da pessoa
-#                                    if self.is_approach_point(person_Ocenter1, point_x, point_y):
-#                                        points_in_fov[person].remove((point_x, point_y))
-#                                        approach_points[person].append((point_x, point_y))
-#                                    # Verifique se o ponto está na melhor região de approach da pessoa
-#                                    if self.is_better_approach_point(person_Ocenter1, point_x, point_y):
-#                                        approach_points[person].remove((point_x, point_y))
-#                                        better_approach_points[person].append((point_x, point_y))
-#                else:#se angulos iguais
-#                    #criar uma 'pessoa virtual' no centro do O_space 
-#                        person_Ocenter = Person(xc, yc, mean_orientation, 0)
-#                        #verificar se os pontos do cluster estão dentro do fov dessa pessoa virtual
-#                        for row in range(self.cluster[cluster_idx].shape[0]):
-#                            for col in range(self.cluster[cluster_idx].shape[1]):
-#                                if self.cluster[cluster_idx][row, col] == 1:  # Verifique se o ponto pertence ao cluster
-#                                    point_x = self.x[col]
-#                                    point_y = self.y[row]
-#                                    # Verifique se o ponto está no campo de visão da pessoa
-#                                    if self.is_point_in_field_of_vision(person_Ocenter, point_x, point_y):
-#                                        points_in_fov[person].append((point_x, point_y))
-#                                    # Verifique se o ponto está na região de approach da pessoa
-#                                    if self.is_approach_point(person_Ocenter, point_x, point_y):
-#                                        points_in_fov[person].remove((point_x, point_y))
-#                                        approach_points[person].append((point_x, point_y))
-#                                    # Verifique se o ponto está na melhor região de approach da pessoa
-#                                    if self.is_better_approach_point(person_Ocenter, point_x, point_y):
-#                                        approach_points[person].remove((point_x, point_y))
-#                                        better_approach_points[person].append((point_x, point_y))
-
-                # Após processar as listas better_approach_points e approach_points, faça a verificação e mova os pontos para points_in_fov
-                
-#                for row in range(self.cluster[cluster_idx].shape[0]):
-#                            for col in range(self.cluster[cluster_idx].shape[1]):
-#                                if self.cluster[cluster_idx][row, col] == 1:  # Verifique se o ponto pertence ao cluster
-#                                    point_x = self.x[col]
-#                                    point_y = self.y[row]
-#                                    if self.is_point_back2(guard_persons, (point_x, point_y)):
-#                                        points_in_fov[person].append((point_x, point_y))
-#                
-#                for person in guard_persons:
-#                    points_to_move_better = []
-#                    points_to_move_approach = []
-#                
-#                    #with open('saida.txt', 'a') as arquivo:
-#                    for point in better_approach_points[person]:
-#                        #print("ponto na lista better", file=arquivo)
-#                        if any(self.is_point_back2(guard_persons, point) for p in guard_persons if p != person):
-#                            points_to_move_better.append(point)
-#                    for point in approach_points[person]:
-#                        #print("ponto na lista approach",file=arquivo)
-#                        if any(self.is_point_back2(guard_persons, point) for p in guard_persons if p != person):
-#                            points_to_move_approach.append(point)
-#                    better_approach_points[person] = [point for point in better_approach_points[person] if point not in points_to_move_better]
-#                    approach_points[person] = [point for point in approach_points[person] if point not in points_to_move_approach]
-#                    points_in_fov[person].extend(points_to_move_better)
-#                    points_in_fov[person].extend(points_to_move_approach)
-
 
             elif num_people >1:
                 #calculo do xc e yc e lista pra guardas as pessoas identico pra n=2
@@ -812,15 +632,15 @@ class OverallDensity(object):
                     points_in_fov[person].extend(points_to_move_approach)
 
         
-        arquivo.write(f'approach_points:{len(approach_points[person])}, better:{len(better_approach_points[person])}, nar:{len(points_in_fov[person])}')
+        #arquivo.write(f'approach_points:{len(approach_points[person])}, better:{len(better_approach_points[person])}, nar:{len(points_in_fov[person])}')
         #print(f'better_approach_points[person]')
         print(f'approach_points:{len(approach_points[person])}, better:{len(better_approach_points[person])}')        
         return points_in_fov, approach_points, better_approach_points
 
 
-    #Plotagens
-    def draw_overall(self, drawDensity=False, drawCluster=False, drawGraph=False, drawSegment=False, plot=plt, people=None):
-
+    # Plotagens
+    def draw_overall(self, drawDensity=False, drawCluster=False, drawGraph=False, drawSegment=False, people=None, plot=plt):
+        
         if drawCluster:
             X, Y = np.meshgrid(self.x, self.y)
             color = np.linspace(0, 1, len(self.cluster))
@@ -848,8 +668,8 @@ class OverallDensity(object):
             ax.set_ylabel('y (meters)')
             ax.set_zlabel('Z')
             ax.view_init(elev=3., azim=-45)
-        if (drawSegment):
-            #X, Y = np.meshgrid(self.x, self.y)
+        if drawSegment and people is not None:
+            # X, Y = np.meshgrid(self.x, self.y)
             # Chame a função para obter os pontos para todas as pessoas em 'people'
             segment_points_dict, approach_points_dict, better_approach_points_dict = self.discretize_clusters_to_approach_regions(people)
             # Plote os pontos coletados na função discretize_clusters_to_approach_regions
@@ -866,156 +686,6 @@ class OverallDensity(object):
                     xb, yb = zip(*points)
                     plot.scatter(xb, yb, marker='o', color='green')
 
-        plt.axis([self.x[0], self.x[len(self.x)-1], self.y[0], self.y[len(self.y)-1]])
-        #plt.axis([-2,2,-2,2])
+        plt.axis([self.x[0], self.x[len(self.x) - 1], self.y[0], self.y[len(self.y) - 1]])
+        # plt.axis([-2,2,-2,2])
         plot.axis('equal')
-
-#####modificação na função draw pra plotar o FOV
-
-    def get_cluster_points(self):
-        cluster_points = []
-        for cluster in self.cluster:
-            cluster_points.extend(cluster)
-        return cluster_points
-
-    def fill_shaded_region(self, plot, person, segment_points, cluster_curve_points):
-        xs, ys = zip(*segment_points)
-        
-        # Certifique-se de que os pontos da curva do cluster têm a mesma dimensão que os pontos dos segmentos
-        cluster_curve_points = np.interp(np.linspace(0, 1, len(segment_points)), np.linspace(0, 1, len(cluster_curve_points)), cluster_curve_points)
-        
-        # Preencher a área sombreada entre os segmentos de linha e a curva do cluster
-        plot.fill_between(xs, ys, cluster_curve_points, color='gray', alpha=0.5, label='Shaded Region')
-
-
-    def draw_overall_fov(self, drawDensity=False, drawCluster=False, drawGraph=False, drawSegment=False, drawFOV=False, plot=plt, people=None):
-
-        if drawCluster:
-            X, Y = np.meshgrid(self.x, self.y)
-            color = np.linspace(0, 1, len(self.cluster))
-            for idx, cluster in enumerate(self.cluster):
-                plot.scatter(X, Y, cluster, edgecolors=plt.cm.Dark2(color[idx]))
-        if (drawGraph):
-            pos = nx.get_node_attributes(self.G, 'pos')
-            nx.draw_networkx(self.G, pos, node_size=000, with_labels=False)
-            labels = nx.get_edge_attributes(self.G, 'weight')  # (self.G, 'None')
-            nx.draw_networkx_edge_labels(self.G, pos, edge_labels=labels, font_size=15)
-            # Uncomment the line below to plot the labels
-            # nx.draw_networkx_labels(self.G,pos,font_size=20,font_family='sans-serif')
-        if (drawDensity):
-            fig = plt.figure()
-            ax = fig.add_subplot(projection='3d')
-            X, Y = np.meshgrid(self.x, self.y)
-            matrix = np.zeros((X.shape[0], Y.shape[0]))
-            for density in self.density:
-                matrix[:, :] += density[:, :]
-                Z = np.zeros((X.shape[0], Y.shape[0])) + 0.609730865463
-                ax.plot_surface(X, Y, Z, color='red', linewidth=0)
-                suface = ax.plot_surface(X, Y, matrix, cmap='jet', linewidth=0)
-                plt.colorbar(suface)
-                ax.set_xlabel('x (meters)')
-                ax.set_ylabel('y (meters)')
-                ax.set_zlabel('Z')
-                ax.view_init(elev=3., azim=-45)
-        if (drawSegment):
-            #X, Y = np.meshgrid(self.x, self.y)
-            # Chame a função para obter os pontos para todas as pessoas em 'people'
-            segment_points_dict, approach_points_dict, better_approach_points_dict = self.discretize_clusters_to_approach_regions(people)
-            # Plote os pontos coletados na função discretize_clusters_to_approach_regions
-            for person, points in segment_points_dict.items():
-                if len(points) > 0:
-                    xs, ys = zip(*points)
-                    plot.scatter(xs, ys, marker='o', color='red')
-                    for person, points in approach_points_dict.items():
-                        if len(points) > 0:
-                            xb, yb = zip(*points)
-                            plot.scatter(xb, yb, marker='o', color='yellow')
-                            for person, points in better_approach_points_dict.items():
-                                if len(points) > 0:
-                                    xb, yb = zip(*points)
-                                    plot.scatter(xb, yb, marker='o', color='green')
-
-        if drawFOV:
-            segment_points_dict, _, _ = self.discretize_clusters_to_approach_regions(people)
-            for person, points in segment_points_dict.items():
-                if len(points) > 0:
-                    first_point = points[0]
-                
-                    # Encontrando o ponto mais à direita (mais próximo do 0 graus)
-                    last_point_rightmost = max(points, key=lambda x: x[0])
-                    
-                    # Segmento 1 (para o ponto mais à esquerda)
-                    plot.plot([person.x, first_point[0]], [person.y, first_point[1]], 'b--', label='Lower Limit')
-                
-                    # Segmento 2 (para o ponto mais à direita, mais próximo do 0 graus)
-                    plot.plot([person.x, last_point_rightmost[0]], [person.y, last_point_rightmost[1]], 'b--', label='Upper Limit')
-
-                    # Preencher a área entre os segmentos de linha e a curva do cluster (se existir)
-                    #if drawCluster:
-                        # Obter os pontos da curva do cluster
-                    #    cluster_curve_points = self.get_cluster_points()
-                    
-                    #    # Preencher a área sombreada
-                    #    self.fill_shaded_region(plot, person, points, cluster_curve_points)
-
-        plt.axis([self.x[0], self.x[len(self.x)-1], self.y[0], self.y[len(self.y)-1]])
-        plt.axis([-2,2,-2,2])
-        plot.axis('equal')
-    
-######modificações na função draw para experimentos no dataset Salsa
-
-    def draw_overall_cv2(self, frame, drawSegment=False, people=None):
-        if drawSegment and isinstance(frame, np.ndarray):  # Verificar se frame é uma imagem (array NumPy)
-
-            if drawSegment:
-                # Desenhar segmentos no frame
-                segment_points_dict, approach_points_dict, better_approach_points_dict = self.discretize_clusters_to_approach_regions(people)
-
-                # Desenhar pontos de segment_points_dict
-                for person, points in segment_points_dict.items():
-                    if len(points) > 0:
-                        for point in points:
-                            pt = tuple(np.array(point).astype(int))
-                            color = (0, 0, 255)  # Vermelho em BGR
-                            radius = 3  # Tamanho do círculo
-                            thickness = -1  # Preenchimento do círculo
-                            cv2.circle(frame, pt, radius, color, thickness)
-
-                # Desenhar pontos de approach_points_dict
-                for person, points in approach_points_dict.items():
-                    if len(points) > 0:
-                        for point in points:
-                            pt = tuple(np.array(point).astype(int))
-                            color = (0, 255, 255)  # Amarelo em BGR
-                            radius = 3  # Tamanho do círculo
-                            thickness = -1  # Preenchimento do círculo
-                            cv2.circle(frame, pt, radius, color, thickness)
-
-                # Desenhar pontos de better_approach_points_dict
-                for person, points in better_approach_points_dict.items():
-                    if len(points) > 0:
-                        for point in points:
-                            pt = tuple(np.array(point).astype(int))
-                            color = (0, 255, 0)  # Verde em BGR
-                            radius = 3  # Tamanho do círculo
-                            thickness = -1  # Preenchimento do círculo
-                            cv2.circle(frame, pt, radius, color, thickness)
-
-            return frame  # Retorna o frame com os desenhos
-    
-        else:
-            #print("O parâmetro 'frame' não é uma imagem válida.")
-            return None  # Retorna None ou lida com o erro de outra forma
-
-
-
-#herdei essa função do Alan não sei o que ela faz
-    def precision_recall(self, f):
-        #
-        est = []
-        graph = list(nx.connected_components(self.G))
-        for component in nx.connected_components(self.G):
-            # remove singleton elements
-            if set(component).isdisjoint(nx.isolates(self.G)):
-                est.append(np.array([list(component)], dtype=np.uint8))
-        return est
