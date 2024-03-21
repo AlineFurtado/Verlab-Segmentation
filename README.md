@@ -5,7 +5,7 @@ This method introduces a novel methodology for the partitioning of the social sp
 ![ALGORITHM1](https://github.com/AlineFurtado/Verlab-Segmentation/assets/71280708/a88c052f-bea4-4429-9e38-15fb5914ee7d)
 # isPointBehindMe(p,c)
 ![ALGORITHM2](https://github.com/AlineFurtado/Verlab-Segmentation/assets/71280708/1513973d-7bfc-46b1-b93e-29b0efc57657)
-#Equation
+# Equations
 ![Equation 2](https://github.com/AlineFurtado/Verlab-Segmentation/assets/71280708/52f5ff81-b22f-41fc-b281-c5578fbcef72)
 ![Equation 3](https://github.com/AlineFurtado/Verlab-Segmentation/assets/71280708/1d1ddf47-3c23-4e63-ba1e-9ea1a74fc8af)
 ![Equation 4](https://github.com/AlineFurtado/Verlab-Segmentation/assets/71280708/b87988e4-7c95-4311-ae7f-101a4f4eeb62)
