@@ -1,0 +1,41 @@
+import sys
+import math
+from math import *
+import numpy as np
+import matplotlib.cm as cm
+import matplotlib.mlab as mlab
+import matplotlib.pyplot as plt
+import matplotlib.patheffects as PathEffects
+from matplotlib.patches import Circle, Wedge, Polygon
+
+from person import Person
+from overall_density6 import OverallDensity
+from F_formation import F_formation
+
+def main():
+    f_formation = F_formation()
+    people = []
+
+    # Criação dos individuos na cena (caso inicial apenas 1 individuo por cluster)
+    p1 = Person(x=0, y=0, th=np.deg2rad(100), id_node=0)
+    p2 = Person(x= 2, y=3, th=np.deg2rad(-90), id_node=1)
+    people.append(p1)
+    people.append(p2)
+    #p3 = Person(x=0.2280701754385963, y= 0.08771929824561386, th=np.deg2rad(45), id_node=2)
+    #people.append(p3)
+
+     #Encontra as regiões sociais da cena
+    G = OverallDensity6(person=people, zone='Social', map_resolution=400, window_size=1)
+    G.make_graph()
+    G.boundary_estimate()
+
+    fig, ax = plt.subplots(figsize=(12,6))#para figuras 
+    fig, ax = plt.subplots(figsize=(4,4))
+    for pi in people:
+        pi.draw(ax)
+
+    G.draw_overall6(drawDensity=False, drawCluster=True, drawGraph=False, drawSegment=True, people=people)
+
+
+if __name__ == "__main__":
+    main()
