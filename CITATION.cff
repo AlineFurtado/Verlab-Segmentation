@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "Se você usar este repositório, por favor, cite-o usando estas metadados."
+title: "AlineFurtado/Verlab-Segmentation"
+version: "1.0.0"
+date-released: "2024-12-10"
+authors:
+- given-names: "Aline"
+  family-names: "Silva"
+  orcid: "https://orcid.org/0009-0009-9351-6965"
+url: "https://github.com/AlineFurtado/Verlab-Segmentation/commit/6ad7b212701272ecd862fdb54ae02791b5bbe53c"
+repository-code: "https://github.com/AlineFurtado/Verlab-Segmentation/commit/6ad7b212701272ecd862fdb54ae02791b5bbe53c"
